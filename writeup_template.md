@@ -1,7 +1,7 @@
 ## Advanced Lane Finding
 [![Udacity - Self-Driving Car NanoDegree](https://s3.amazonaws.com/udacity-sdc/github/shield-carnd.svg)](http://www.udacity.com/drive)
 
-<a href="http://www.youtube.com/watch?feature=player_embedded&v=zwTB2HMuP6Y" target="_blank"><img src="http://img.youtube.com/vi/zwTB2HMuP6Y/0.jpg" 
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=cqhYOQS26C8" target="_blank"><img src="http://img.youtube.com/vi/cqhYOQS26C8/0.jpg" 
 alt="This My test video" width="960" height="540" border="10" /></a>
 
 ### This My test video
@@ -26,7 +26,15 @@ When we drive, we use our eyes to decide where to go.  The lines on the road tha
 [image7]: ./readmemd/CombinedBirds_Eye_View.png "CombinedBirds_Eye_View.png"
 [image8]: ./readmemd/SlideWindowsImage.png "SlideWindowsImage"
 [image9]: ./readmemd/Poly.png "Poly"
-[image10]: ./readmemd/drawed_image.png "drawed_image"
+
+[image11]: ./output_images/Drawed_Dataed_image/straight_lines1.jpg "Drawed_Dataed_image"
+[image12]: ./output_images/Drawed_Dataed_image/straight_lines2.jpg "Drawed_Dataed_image"
+[image13]: ./output_images/Drawed_Dataed_image/test1.jpg "Drawed_Dataed_image"
+[image14]: ./output_images/Drawed_Dataed_image/test2.jpg "Drawed_Dataed_image"
+[image15]: ./output_images/Drawed_Dataed_image/test3.jpg "Drawed_Dataed_image"
+[image16]: ./output_images/Drawed_Dataed_image/test4.jpg "Drawed_Dataed_image"
+[image17]: ./output_images/Drawed_Dataed_image/test5.jpg "Drawed_Dataed_image"
+[image18]: ./output_images/Drawed_Dataed_image/test6.jpg "Drawed_Dataed_image"
 
 
 The Project
@@ -49,7 +57,7 @@ My pipeline consisted of some steps.
 * 02.Apply a distortion correction to raw images.
 * 03.Use color transforms, gradients, etc., to create a thresholded binary image.
 * 04.Use to correctly rectify each image to a "birds-eye view"
-* 05. Identified lane-line pixels and fit their positions
+* 05.Identified lane-line pixels and fit their positions
 * 06.Determine the curvature of the lane and vehicle position with respect to center
 * 07.Warp the detected lane boundaries back onto the original image.
 * 08.Pipeline_video
@@ -307,16 +315,18 @@ def measure_curvature_pixels_in_realworld(ploty, leftx, lefty, rightx, righty, l
     # meters per pixel in y dimension
     ym_per_pix = 30/720 
     # meters per pixel in x dimension
-    xm_per_pix = 3.7/680 
+    xm_per_pix = 3.7/720
     # Reverse to match top-to-bottom in y
     leftx = leftx[::-1]  
     # Reverse to match top-to-bottom in y
     rightx = rightx[::-1]  
-    
+    # Define y-value where we want radius of curvature
+    # We'll choose the maximum y-value, corresponding to the bottom of the image
+    y_eval = np.max(ploty)
 
-    left_lane = np.mean(left_fit[0]*combined_binary[0]**2 + left_fit[1]*combined_binary[0] + left_fit[2])
+    left_lane = np.mean(left_fit[0]*y_eval**2 + left_fit[1]*y_eval + left_fit[2])
 
-    right_lane = np.mean(right_fit[0]*combined_binary[0]**2 + right_fit[1]*combined_binary[0] + right_fit[2])
+    right_lane = np.mean(right_fit[0]*y_eval**2 + right_fit[1]*y_eval + right_fit[2])
 
     car_position = combined_binary.shape[1]/2
 
@@ -328,9 +338,7 @@ def measure_curvature_pixels_in_realworld(ploty, leftx, lefty, rightx, righty, l
 
     right_fit_cr = np.polyfit(righty*ym_per_pix, rightx*xm_per_pix, 2)
 
-    # Define y-value where we want radius of curvature
-    # We'll choose the maximum y-value, corresponding to the bottom of the image
-    y_eval = np.max(ploty)
+    
     
     # Calculation of R_curve (radius of curvature)
     left_curverad = ((1 + (2*left_fit_cr[0]*y_eval*ym_per_pix + left_fit_cr[1])**2)**1.5) / np.absolute(2*left_fit_cr[0])
@@ -412,8 +420,14 @@ def info_image(original_img, combined_binary, left_fit, right_fit, Minv, curvera
 ```
 
 Result
-![alt text][image10]
-
+![alt text][image11]
+![alt text][image12]
+![alt text][image13]
+![alt text][image14]
+![alt text][image15]
+![alt text][image16]
+![alt text][image17]
+![alt text][image18]
 #### 08.Pipeline_video
 
 In summary, we are going to start video streaming.
@@ -513,9 +527,8 @@ The following judgment logic is as follows:
     return drawed_image
 
 ```
-<a href="http://www.youtube.com/watch?feature=player_embedded&v=zwTB2HMuP6Y" target="_blank"><img src="http://img.youtube.com/vi/zwTB2HMuP6Y/0.jpg" 
+<a href="http://www.youtube.com/watch?feature=player_embedded&v=cqhYOQS26C8" target="_blank"><img src="http://img.youtube.com/vi/cqhYOQS26C8/0.jpg" 
 alt="This My test video" width="960" height="540" border="10" /></a>
-
 
 ### Discussion
 
@@ -526,5 +539,12 @@ I think the way to improve can be handled with continuous polynomials, because t
 We can know that the intercept of the polynomial should have an average.
 We can find a lot of polynomials, and then take two lines with the closest two coefficients and one lane wide as the lane line. This can eliminate noise very well.
 Another attempt is to make a mask for the lane center and periphery of the previous frame when the image is preprocessed, and then search for the lane line for the inside, which is more efficient than direct search. .
+
+
+#### After first Review
+
+After the first submission review, I found a bug in my program.
+I fixed the bug and took the inspector's suggestion to add a binary image to the image.
+This will understand what the computer actually saw during the operation.
 
 Thank you for reading
