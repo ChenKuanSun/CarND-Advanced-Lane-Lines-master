@@ -57,7 +57,7 @@ My pipeline consisted of some steps.
 * 02.Apply a distortion correction to raw images.
 * 03.Use color transforms, gradients, etc., to create a thresholded binary image.
 * 04.Use to correctly rectify each image to a "birds-eye view"
-* 05. Identified lane-line pixels and fit their positions
+* 05.Identified lane-line pixels and fit their positions
 * 06.Determine the curvature of the lane and vehicle position with respect to center
 * 07.Warp the detected lane boundaries back onto the original image.
 * 08.Pipeline_video
